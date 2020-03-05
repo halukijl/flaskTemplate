@@ -20,7 +20,7 @@ def home():
 
 @app.route('/index')
 def index():
-    user = {'username': 'Tyler'}
+    user = {'username': 'Jenny'}
     items = [
         {'name':'Apple','price':2.34},
         {'name':'Orange','price':4.88},
