@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import request,session, redirect, url_for, escape,send_from_directory,make_response 
-
+from customer import customerList
 import pymysql 
 import json
 app = Flask(__name__,static_url_path='')
@@ -27,6 +27,15 @@ def index():
         {'name':'Grape','price':2.44}
     ]
     return render_template('index.html', title='Home', user=user, items=items)
+
+@app.route('/customers')
+def customers():
+
+    c = customerList()
+    c.getAll()
+    print(c.data)
+    return''
+    #return render_template('index.html', title='Home', user=user, items=items)
 
 @app.route('/static/<path:path>')
 def send_static(path):
