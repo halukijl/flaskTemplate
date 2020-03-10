@@ -41,7 +41,13 @@ def customers():
 @app.route('/customer')
 def customer():
     c = customerList()
+    if request.args.get(c.pk) is None:
+        return render_template('error.html', msg='No customer id given.')
+
     c.getById(request.args.get(c.pk))
+    
+    if len(c.data) <= 0:
+        return render_template('error.html', msg='Customer not found.')
 
     print(c.data)
     #return''

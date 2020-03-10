@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Customer</h1>
+
+    <div class="errorText">
+    {% if msg %}
+     {{ msg }}
+      {% else %}
+     General error.
+      {% endif %}
+    </div>
+
+{% endblock %}
