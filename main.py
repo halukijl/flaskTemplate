@@ -21,6 +21,7 @@ def home():
 @app.route('/index')
 def index():
     user = {'username': 'Jenny'}
+
     items = [
         {'name':'Apple','price':2.34},
         {'name':'Orange','price':4.88},
@@ -30,12 +31,22 @@ def index():
 
 @app.route('/customers')
 def customers():
-
     c = customerList()
     c.getAll()
+
     print(c.data)
-    return''
-    #return render_template('index.html', title='Home', user=user, items=items)
+    #return''
+    return render_template('customers.html', title='Customer List', customers=c.data)
+
+@app.route('/customer')
+def customer():
+    c = customerList()
+    c.getById(request.args.get(c.pk))
+
+    print(c.data)
+    #return''
+    return render_template('customer.html', title='Customer', customer=c.data[0])
+
 
 @app.route('/static/<path:path>')
 def send_static(path):
