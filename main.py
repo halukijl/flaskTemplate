@@ -53,7 +53,7 @@ def customer():
     #return''
     return render_template('customer.html', title='Customer', customer=c.data[0])
 
-@app.route('/newcustomer', methods = ['POST'])
+@app.route('/newcustomer', methods = ['GET', 'POST'])
 def newcustomer():
     if request.form.get('fname') is None:
         c = customerList()
@@ -72,9 +72,32 @@ def newcustomer():
         c.set('password',request.form.get('password'))
         c.set('subscribed',request.form.get('subscribed'))
         c.add()
-        c.insert()
-        print(c.data)
-        return ''
+        if c.verifyNew():
+            c.insert()
+            print(c.data)
+            return render_template('savedcustomer.html', title='Customer Saved', customer=c.data[0])
+        else:
+            return render_template('newcustomer.html', title='Customer Not Saved', customer=c.data[0], msg=c.errorList)
+
+@app.route('/main')
+def main():
+    return render_template('main.html', title='Main Menu')
+
+@app.route('/saveCustomer', methods = ['GET', 'POST'])
+def savecustomer():
+    c = customerList()
+    c.set('id',request.form.get('id'))
+    c.set('fname',request.form.get('fname'))
+    c.set('lname',request.form.get('lname'))
+    c.set('email',request.form.get('email'))
+    c.set('password',request.form.get('password'))
+    c.set('subscribed',request.form.get('subscribed'))
+    c.add()
+    c.update()
+    print(c.data)
+    #return ''
+    return render_template('savedcustomer.html', title='Customer Saved', customer=c.data[0])
+
 
 @app.route('/static/<path:path>')
 def send_static(path):
