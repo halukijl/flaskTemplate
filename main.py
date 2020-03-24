@@ -53,6 +53,28 @@ def customer():
     #return''
     return render_template('customer.html', title='Customer', customer=c.data[0])
 
+@app.route('/newcustomer', methods = ['POST'])
+def newcustomer():
+    if request.form.get('fname') is None:
+        c = customerList()
+        c.set('fname', '')
+        c.set('lname', '')
+        c.set('email', '')
+        c.set('password', '')
+        c.set('subscribed', '')
+        c.add()
+        return render_template('newcustomer.html', title='New Customer', customer=c.data[0])
+    else:
+        c = customerList()
+        c.set('fname',request.form.get('fname'))
+        c.set('lname',request.form.get('lname'))
+        c.set('email',request.form.get('email'))
+        c.set('password',request.form.get('password'))
+        c.set('subscribed',request.form.get('subscribed'))
+        c.add()
+        c.insert()
+        print(c.data)
+        return ''
 
 @app.route('/static/<path:path>')
 def send_static(path):
@@ -61,3 +83,14 @@ def send_static(path):
 if __name__ == '__main__':
    app.secret_key = '1234'
    app.run(host='127.0.0.1',debug=True)
+
+
+
+
+
+
+
+
+
+
+
