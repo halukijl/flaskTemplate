@@ -83,7 +83,7 @@ def newcustomer():
 def main():
     return render_template('main.html', title='Main Menu')
 
-@app.route('/saveCustomer', methods = ['GET', 'POST'])
+@app.route('/savedCustomer', methods = ['GET', 'POST'])
 def savecustomer():
     c = customerList()
     c.set('id',request.form.get('id'))
