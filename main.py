@@ -6,6 +6,19 @@ import pymysql
 import json
 app = Flask(__name__,static_url_path='')
 
+@app.route('/set')
+def set():
+    session['time'] = time.time()
+    return 'set'
+
+@app.route('/get')
+def get():
+    return str(session['time'])
+
+@app.route('/nothing')
+def nothing():
+    print('hi')
+    return ''
 
 @app.route('/basichttp')
 def basichttp():
@@ -63,7 +76,7 @@ def newcustomer():
         c.set('password', '')
         c.set('subscribed', '')
         c.add()
-        return render_template('newcustomer.html', title='New Customer', customer=c.data[0])
+        return render_template('newCustomer.html', title='New Customer', customer=c.data[0])
     else:
         c = customerList()
         c.set('fname',request.form.get('fname'))
@@ -83,7 +96,7 @@ def newcustomer():
 def main():
     return render_template('main.html', title='Main Menu')
 
-@app.route('/savedCustomer', methods = ['GET', 'POST'])
+@app.route('/savecustomer', methods = ['GET', 'POST'])
 def savecustomer():
     c = customerList()
     c.set('id',request.form.get('id'))
