@@ -2,9 +2,15 @@ from flask import Flask
 from flask import render_template
 from flask import request,session, redirect, url_for, escape,send_from_directory,make_response 
 from customer import customerList
-import pymysql 
-import json
+import json, pymysql, time
+
+from flask_session import Session
+
 app = Flask(__name__,static_url_path='')
+
+SESSION_TYPE = 'filesystem'
+app.config.from_object(__name__)
+Session(app)
 
 @app.route('/set')
 def set():
@@ -14,6 +20,19 @@ def set():
 @app.route('/get')
 def get():
     return str(session['time'])
+
+@app.route('/login', methods = ['GET','POST'])
+def login():
+    if request.form.get('email') is not None and request.form.get('password') is not None:
+        c = customerList()
+        if c.tryLogin(request.form.get('email'),request.form.get('password')):
+            print('Login Okay')
+        else:
+            print('Login Failed')
+        return''
+    else:
+        return render_template('login.html', title='Login', 
+        msg='Type your email and password to continue.')
 
 @app.route('/nothing')
 def nothing():

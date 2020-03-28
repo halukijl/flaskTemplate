@@ -31,3 +31,28 @@ class customerList(baseObject):
             return False
         else:
             return True
+
+    def tryLogin(self, email, pw):
+        #SELECT * FROM 'halukijl_customers' WHERE 'email' = 'jennyhaluk12@gmail.com' AND 'password' = '1234'
+        sql = 'SELECT * FROM `' +self.tn + '`WHERE `email` =%s AND `password` =%s;'
+        tokens = (email, pw)
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        cur.execute(sql,tokens)
+        self.data = []
+        n=0
+        for row in cur:
+            self.data.append(row)
+            n+=1
+        if n > 0:
+            return True
+        else:
+            return False
+
+
+
+
+
+
+
+
