@@ -10,9 +10,9 @@ Relation Schema:
 
 Use Cases:
 
-Buy Products
-Return Products
-Update User
-Add New User
-Become An Ambassador
-Provide Customer Service
+-Buy Products,
+-Return Products,
+-Update User,
+-Add New User,
+-Become An Ambassador,
+-Provide Customer Service,
