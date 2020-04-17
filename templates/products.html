@@ -2,16 +2,18 @@
 
 {% block content %}
     <h1>Products</h1>
-            <a href="newproduct"> Add new product</a>
+            <a href="newProduct"> Add new product</a>
             <table>
             <tr>
+                    <td>pid</td>
                     <td>sku</td>
                     <td>name</td>
                     <td>price</td>
             </tr>
     {% for product in products %}
             <tr>
-                    <td><a href="product?sku={{ product.sku }}">{{ product.sku }}</a></td>
+                    <td><a href="product?pid={{ product.pid }}">{{ product.pid }}</a></td>
+                    <td>{{ product.sku }}</td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.price }}</td>
             </tr>

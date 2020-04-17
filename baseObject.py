@@ -8,7 +8,6 @@ class baseObject:
         self.tn = tn
         self.fnl = ['fname','lname','email','password','subscribed']
         self.pk = 'id'
-        self.ck = 'sku'
         self.conn = None
         self.errorList = []
         self.getFields()
@@ -34,7 +33,7 @@ class baseObject:
             self.data[n][fn] = val
         else:
             print("Could not set value at row " + str(n) + " col " + str(fn) )
-
+        
     def insert(self,n=0):
 
         #cols = '`,`'.join(self.fnl)

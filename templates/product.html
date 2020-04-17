@@ -2,8 +2,7 @@
 
 {% block content %}
     <h1>Product</h1>
-        <form action="/saveProduct" method="POST">
-            
+        <form action="/saveproduct" method="POST">
             SKU:<br>
             <input type="int" name="sku" value="{{ product.sku }}"/><br><br>
 
@@ -13,12 +12,10 @@
             Price:<br>
             <input type="float" name="price" value="{{ product.price }}" /><br><br>
 
-            <input type="hidden" name="id" value="{{ product.id }}" />
-
-            <br><br>
+            <input type="hidden" name="pid" value="{{ product.pid }}" /><br>
             
             <input type="submit" value="Save Product"/>
-        
+
         </form>
 
 {% endblock %}
