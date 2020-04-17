@@ -8,6 +8,7 @@ class baseObject:
         self.tn = tn
         self.fnl = ['fname','lname','email','password','subscribed']
         self.pk = 'id'
+        self.ck = 'sku'
         self.conn = None
         self.errorList = []
         self.getFields()

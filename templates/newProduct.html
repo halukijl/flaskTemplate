@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>New Product</h1>
+    {% if msg %}
+        <div id = "errormsg">
+        {% for err in msg %}
+          {{ err}}<br>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+        <form action="/newProduct" method="POST">
+            
+            SKU:<br>
+            <input type="int" name="sku" /><br><br>
+            
+            Name:<br>
+            <input type="text" name="name" /><br><br>
+            
+            Price:<br>
+            <input type="float" name="price" /><br><br>
+
+            <br><br>
+            
+            <input type="submit" value="Save Product"/>
+        </form>
+
+{% endblock %}

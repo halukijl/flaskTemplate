@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import request,session, redirect, url_for, escape,send_from_directory,make_response 
 from customer import customerList
+from product import productList
 import json, pymysql, time
 
 from flask_session import Session
@@ -92,6 +93,73 @@ def customers():
     #return''
     return render_template('customers.html', title='Customer List', customers=c.data)
 
+@app.route('/products')
+def products():
+    if checkSession() == False:
+        return redirect('login')
+    p = productList()
+    p.getAll()
+
+    print(p.data)
+    #return''
+    return render_template('products.html', title='Product List', products=p.data)
+
+@app.route('/newProduct', methods = ['GET', 'POST'])
+def newProduct():
+    if checkSession() == False:
+        return redirect('login')
+    if request.form.get('sku') is None:
+        p = productList()
+        p.set('sku', '')
+        p.set('name', '')
+        p.set('price', '')
+        p.add()
+        return render_template('newProduct.html', title='New Product', product=p.data[0])
+    else:
+        p = productList()
+        p.set('sku',request.form.get('sku'))
+        p.set('name',request.form.get('name'))
+        p.set('price',request.form.get('price'))
+        p.add()
+        if p.verifyNew():
+            p.insert()
+            print(p.data)
+            return render_template('savedProduct.html', title='Product Saved', product=p.data[0])
+        else:
+            return render_template('newProduct.html', title='Product Not Saved', product=p.data[0], msg=p.errorList)
+
+@app.route('/saveproduct', methods = ['GET', 'POST'])
+def saveproduct():
+    if checkSession() == False:
+        return redirect('login')
+    p = productList()
+    p.set('id',request.form.get('id'))
+    p.set('sku',request.form.get('sku'))
+    p.set('name',request.form.get('name'))
+    p.set('price',request.form.get('price'))
+    p.add()
+    p.update()
+    print(p.data)
+    #return ''
+    return render_template('savedProduct.html', title='Product Saved', product=p.data[0])
+
+@app.route('/product')
+def product():
+    if checkSession() == False:
+        return redirect('login')
+    p = productList()
+    if request.args.get(p.ck) is None:
+        return render_template('error.html', msg='No product id given.')
+
+    p.getById(request.args.get(p.ck))
+    
+    if len(p.data) <= 0:
+        return render_template('error.html', msg='Product not found.')
+
+    print(p.data)
+    #return''
+    return render_template('product.html', title='Product', product=p.data[0])
+
 @app.route('/customer')
 def customer():
     if checkSession() == False:
@@ -165,7 +233,7 @@ def checkSession():
     if 'active' in session.keys():
         timeSinceAct = time.time() - session['active']
         print(timeSinceAct)
-        if timeSinceAct > 500:
+        if timeSinceAct > 5000:
             session['msg'] = 'Your session has timed out'
             return False
         else:    
