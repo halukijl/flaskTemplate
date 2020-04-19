@@ -82,6 +82,15 @@ def index():
     ]
     return render_template('index.html', title='Home', user=user, items=items)
 
+@app.route('/Cproducts')
+def Cproducts():
+    if checkSession() == False:
+        return redirect('login')
+    p = productList()
+    p.getAll()
+
+    return render_template('Cproducts.html', title='Our Products', products=p.data)
+
 @app.route('/customers')
 def customers():
     if checkSession() == False:
