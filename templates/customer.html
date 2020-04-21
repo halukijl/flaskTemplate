@@ -32,4 +32,10 @@
         
         </form>
 
+        <form action="/deletecustomer" method="POST">
+            <input type="submit" value="Delete This Customer?" />
+            <input type="hidden" name="id" value="{{ customer.id }}" />
+        </form>
+
+
 {% endblock %}

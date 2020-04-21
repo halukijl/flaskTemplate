@@ -237,6 +237,14 @@ def savecustomer():
     #return ''
     return render_template('savedcustomer.html', title='Customer Saved', customer=c.data[0])
 
+@app.route('/deletecustomer', methods = ['GET', 'POST'])
+def deletecustomer():
+    if checkSession() == False:
+        return redirect('login')
+    c = customerList()
+    c.deleteByID(request.form.get('id'))
+    return render_template('deletedCustomer.html', title='Customer Deleted', msg= 'Customer deleted.')
+
 def checkSession():
     if 'active' in session.keys():
         timeSinceAct = time.time() - session['active']
