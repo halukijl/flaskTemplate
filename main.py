@@ -67,7 +67,7 @@ def loginadmin():
             session['user'] = u.data[0]
             session['active'] = time.time()
 
-            return redirect('mainadmin')
+            return redirect('mainAdmin')
         else:
             return render_template('loginadmin.html', title='Login', 
             msg='Incorrect credentials.')
@@ -264,6 +264,13 @@ def main():
         return redirect('login')
     userinfo = 'Hello, ' + session['user']['fname']
     return render_template('main.html', title='Main Menu', msg = userinfo)
+
+@app.route('/mainAdmin')
+def mainAdmin():
+    if checkSession() == False:
+        return redirect('loginadmin')
+    userinfo = 'Hello, ' + session['user']['fname']
+    return render_template('mainAdmin.html', title='Main Menu', msg = userinfo)
 
 @app.route('/savecustomer', methods = ['GET', 'POST'])
 def savecustomer():
