@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>New Customer</h1>
+    <h1>New User</h1>
     {% if msg %}
         <div id = "errormsg">
         {% for err in msg %}
@@ -26,10 +26,12 @@
                 <option value="True" >Yes </option>
                 <option value="False" >No </option>
             </select>
-
+            <br><br>
+            Customer or Admin?:<br>
+            <input type="text" name="type" /><br><br>
             <br><br>
             
-            <input type="submit" value="Save Customer"/>
+            <input type="submit" value="Save User"/>
         </form>
 
 {% endblock %}

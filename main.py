@@ -30,6 +30,7 @@ def login():
             #print('Login Okay')
             session['user'] = c.data[0]
             session['active'] = time.time()
+            '''
             o = orderList()
             o.getLast(session['user']['id'])
             if len(o.data) > 0: 
@@ -41,7 +42,7 @@ def login():
                 o.add()
                 o.insert()
                 session['orderid'] = o.data[0]['order_id'] 
-
+            '''
             return redirect('main')
         else:
             #print('Login Failed')
@@ -111,6 +112,16 @@ def customers():
 
     print(c.data)
     return render_template('customers.html', title='Customer List', customers=c.data)
+
+@app.route('/users')
+def users():
+    if checkSession() == False:
+        return redirect('login')
+    u = userList()
+    u.getAll()
+
+    print(u.data)
+    return render_template('customers.html', title='User List', users=u.data)
 
 @app.route('/products')
 def products():

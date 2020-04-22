@@ -1,21 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Customers</h1>
-            <a href="newcustomer"> Add new customer</a>
+    <h1>Users</h1>
+            <a href="newcustomer"> Add new user</a>
             <table>
             <tr>
                     <td>ID</td>
                     <td>NAME</td>
                     <td>EMAIL</td>
                     <td>SUBSCRIBED</td>
+                    <td>TYPE</td>
             </tr>
-    {% for customer in customers %}
+    {% for user in users %}
             <tr>
-                    <td><a href="customer?id={{ customer.id }}">{{ customer.id }}</a></td>
-                    <td>{{ customer.fname }} {{ customer.lname }}</td>
-                    <td>{{ customer.email }}</td>
-                    <td>{{ customer.subscribed}}</td>
+                    <td><a href="user?id={{ user.id }}">{{ user.id }}</a></td>
+                    <td>{{ user.fname }} {{ user.lname }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.subscribed}}</td>
+                    <td>{{ user.type}}</td>
+
             </tr>
     {% endfor %}
         </table>
