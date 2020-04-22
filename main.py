@@ -3,6 +3,7 @@ from flask import render_template
 from flask import request,session, redirect, url_for, escape,send_from_directory,make_response 
 from customer import customerList
 from product import productList
+from user import userList
 import json, pymysql, time
 
 from flask_session import Session
@@ -25,10 +26,10 @@ def get():
 @app.route('/login', methods = ['GET','POST'])
 def login():
     if request.form.get('email') is not None and request.form.get('password') is not None:
-        c = customerList()
-        if c.tryLogin(request.form.get('email'),request.form.get('password')):
+        u = userList()
+        if u.tryLogin(request.form.get('email'),request.form.get('password')):
             #print('Login Okay')
-            session['user'] = c.data[0]
+            session['user'] = u.data[0]
             session['active'] = time.time()
             '''
             o = orderList()
@@ -56,6 +57,28 @@ def login():
             session['msg'] = None
 
         return render_template('login.html', title='Login', 
+        msg=m)
+
+@app.route('/loginadmin', methods = ['GET','POST'])
+def loginadmin():
+    if request.form.get('email') is not None and request.form.get('password') is not None:
+        u = userList()
+        if u.tryLogin(request.form.get('email'),request.form.get('password')):
+            session['user'] = u.data[0]
+            session['active'] = time.time()
+
+            return redirect('mainadmin')
+        else:
+            return render_template('loginadmin.html', title='Login', 
+            msg='Incorrect credentials.')
+    else:
+        if 'msg' not in session.keys() or session['msg'] is None:
+            m = 'Type your email and password to continue.'
+        else:
+            m = session['msg']
+            session['msg'] = None
+
+        return render_template('loginadmin.html', title='Login', 
         msg=m)
 
 @app.route('/logout', methods = ['GET','POST'])
