@@ -2,9 +2,9 @@ import pymysql
 
 from baseObject import baseObject
 
-class userList(baseObject):
+class adminList(baseObject):
     def __init__(self):
-        self.setupObject('halukijl_users')
+        self.setupObject('halukijl_admins')
 
     def verifyNew(self, n=0):
         self.errorList = []
@@ -21,12 +21,6 @@ class userList(baseObject):
             self.errorList.append("Password cannot be blank.")
         elif len(self.data[n]['password']) >= 5:
             self.errorList.append("Password must be 4 or less characters.")
-        if self.data[n]['subscribed'].lower() == 'true':
-            self.data[n]['subscribed'] = 'true'
-        elif self.data[n]['subscribed'].lower() == 'false':
-            self.data[n]['subscribed'] = 'false'
-        else:
-            self.errorList.append("Subscription must be True or False.")
         if len(self.errorList) > 0:
             return False
         else:
@@ -48,11 +42,3 @@ class userList(baseObject):
             return True
         else:
             return False
-
-
-
-
-
-
-
-

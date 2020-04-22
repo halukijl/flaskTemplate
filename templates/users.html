@@ -2,14 +2,13 @@
 
 {% block content %}
     <h1>Users</h1>
-            <a href="newcustomer"> Add new user</a>
+            <a href="newuser"> Add new user</a>
             <table>
             <tr>
                     <td>ID</td>
                     <td>NAME</td>
                     <td>EMAIL</td>
                     <td>SUBSCRIBED</td>
-                    <td>TYPE</td>
             </tr>
     {% for user in users %}
             <tr>
@@ -17,7 +16,6 @@
                     <td>{{ user.fname }} {{ user.lname }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.subscribed}}</td>
-                    <td>{{ user.type}}</td>
 
             </tr>
     {% endfor %}

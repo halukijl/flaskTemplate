@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Admin</h1>
+        <form action="/saveadmin" method="POST">
+            First Name:<br>
+            <input type="text" name="fname" value="{{ admin.fname }}"/><br><br>
+
+            Last Name:<br>
+            <input type="text" name="lname" value="{{ admin.lname }}" /><br><br>
+
+            Email:<br>
+            <input type="text" name="email" value="{{ admin.email }}" /><br><br>
+
+            <input type="hidden" name="id" value="{{ admin.id }}" />
+
+            Password:<br>
+            <input type="password" name="password" /> <br> <br>
+
+            Retype Password:<br>
+            <input type="password" name="password2" /> <br> <br>
+            
+            <input type="submit" value="Save Admin"/>
+        
+        </form>
+
+        <form action="/deleteadmin" method="POST">
+            <input type="submit" value="Delete This Admin?" />
+            <input type="hidden" name="id" value="{{ admin.id }}" />
+        </form>
+
+
+{% endblock %}

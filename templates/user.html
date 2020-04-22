@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>USer</h1>
-        <form action="/savecustomer" method="POST">
+    <h1>User</h1>
+        <form action="/saveuser" method="POST">
             First Name:<br>
             <input type="text" name="fname" value="{{ user.fname }}"/><br><br>
 
@@ -26,15 +26,12 @@
                 <option value="False" >No </option>
             </select>
             <br><br>
-            Customer or Admin?:<br>
-            <input type="text" name="type" /><br><br>
-            <br><br>
             
             <input type="submit" value="Save User"/>
         
         </form>
 
-        <form action="/deletecustomer" method="POST">
+        <form action="/deleteuser" method="POST">
             <input type="submit" value="Delete This User?" />
             <input type="hidden" name="id" value="{{ user.id }}" />
         </form>

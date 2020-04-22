@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template
 from flask import request,session, redirect, url_for, escape,send_from_directory,make_response 
 from customer import customerList
+from admin import adminList
 from product import productList
 from user import userList
 import json, pymysql, time
@@ -62,9 +63,9 @@ def login():
 @app.route('/loginadmin', methods = ['GET','POST'])
 def loginadmin():
     if request.form.get('email') is not None and request.form.get('password') is not None:
-        u = userList()
-        if u.tryLogin(request.form.get('email'),request.form.get('password')):
-            session['user'] = u.data[0]
+        a = adminList()
+        if a.tryLogin(request.form.get('email'),request.form.get('password')):
+            session['user'] = a.data[0]
             session['active'] = time.time()
 
             return redirect('mainAdmin')
@@ -126,16 +127,6 @@ def Cproducts():
 
     return render_template('Cproducts.html', title='Our Products', products=p.data)
 
-@app.route('/customers')
-def customers():
-    if checkSession() == False:
-        return redirect('login')
-    c = customerList()
-    c.getAll()
-
-    print(c.data)
-    return render_template('customers.html', title='Customer List', customers=c.data)
-
 @app.route('/users')
 def users():
     if checkSession() == False:
@@ -144,7 +135,17 @@ def users():
     u.getAll()
 
     print(u.data)
-    return render_template('customers.html', title='User List', users=u.data)
+    return render_template('users.html', title='User List', users=u.data)
+
+@app.route('/admins')
+def admins():
+    if checkSession() == False:
+        return redirect('login')
+    a = adminList()
+    a.getAll()
+
+    print(a.data)
+    return render_template('admins.html', title='Admin List', admins=a.data)
 
 @app.route('/products')
 def products():
@@ -213,50 +214,95 @@ def product():
     #return''
     return render_template('product.html', title='Product', product=p.data[0])
 
-@app.route('/customer')
-def customer():
+@app.route('/user')
+def user():
     if checkSession() == False:
         return redirect('login')
-    c = customerList()
-    if request.args.get(c.pk) is None:
-        return render_template('error.html', msg='No customer id given.')
+    u = userList()
+    if request.args.get(u.pk) is None:
+        return render_template('error.html', msg='No user id given.')
 
-    c.getById(request.args.get(c.pk))
+    u.getById(request.args.get(u.pk))
     
-    if len(c.data) <= 0:
-        return render_template('error.html', msg='Customer not found.')
+    if len(u.data) <= 0:
+        return render_template('error.html', msg='User not found.')
 
-    print(c.data)
+    print(u.data)
     #return''
-    return render_template('customer.html', title='Customer', customer=c.data[0])
+    return render_template('user.html', title='User', user=u.data[0])
 
-@app.route('/newcustomer', methods = ['GET', 'POST'])
-def newcustomer():
+@app.route('/admin')
+def admin():
+    if checkSession() == False:
+        return redirect('login')
+    a = adminList()
+    if request.args.get(a.pk) is None:
+        return render_template('error.html', msg='No admin id given.')
+
+    a.getById(request.args.get(a.pk))
+    
+    if len(a.data) <= 0:
+        return render_template('error.html', msg='Admin not found.')
+
+    print(a.data)
+    #return''
+    return render_template('admin.html', title='Admin', admin=a.data[0])
+
+@app.route('/newuser', methods = ['GET', 'POST'])
+def newuser():
     if checkSession() == False:
         return redirect('login')
     if request.form.get('fname') is None:
-        c = customerList()
-        c.set('fname', '')
-        c.set('lname', '')
-        c.set('email', '')
-        c.set('password', '')
-        c.set('subscribed', '')
-        c.add()
-        return render_template('newCustomer.html', title='New Customer', customer=c.data[0])
+        u = userList()
+        u.set('fname', '')
+        u.set('lname', '')
+        u.set('email', '')
+        u.set('password', '')
+        u.set('subscribed', '')
+        u.add()
+        return render_template('newUser.html', title='New User', user=u.data[0])
     else:
-        c = customerList()
-        c.set('fname',request.form.get('fname'))
-        c.set('lname',request.form.get('lname'))
-        c.set('email',request.form.get('email'))
-        c.set('password',request.form.get('password'))
-        c.set('subscribed',request.form.get('subscribed'))
-        c.add()
-        if c.verifyNew():
-            c.insert()
-            print(c.data)
-            return render_template('savedcustomer.html', title='Customer Saved', customer=c.data[0])
+        u = userList()
+        u.set('fname',request.form.get('fname'))
+        u.set('lname',request.form.get('lname'))
+        u.set('email',request.form.get('email'))
+        u.set('password',request.form.get('password'))
+        u.set('subscribed',request.form.get('subscribed'))
+        u.add()
+        if u.verifyNew():
+            u.insert()
+            print(u.data)
+            return render_template('saveduser.html', title='User Saved', user=u.data[0])
         else:
-            return render_template('newcustomer.html', title='Customer Not Saved', customer=c.data[0], msg=c.errorList)
+            return render_template('newuser.html', title='User Not Saved', user=u.data[0], msg=u.errorList)
+
+@app.route('/newadmin', methods = ['GET', 'POST'])
+def newadmin():
+    if checkSession() == False:
+        return redirect('login')
+    if request.form.get('fname') is None:
+        a = adminList()
+        a.set('fname', '')
+        a.set('lname', '')
+        a.set('email', '')
+        a.set('password', '')
+        a.set('subscribed', '')
+        a.add()
+        return render_template('newadmin.html', title='New Admin', admin=a.data[0])
+    else:
+        a = adminList()
+        a.set('fname',request.form.get('fname'))
+        a.set('lname',request.form.get('lname'))
+        a.set('email',request.form.get('email'))
+        a.set('password',request.form.get('password'))
+        a.set('subscribed',request.form.get('subscribed'))
+        a.add()
+        if a.verifyNew():
+            a.insert()
+            print(a.data)
+            return render_template('savedadmin.html', title='Admin Saved', admin=a.data[0])
+        else:
+            return render_template('newadmin.html', title='Admin Not Saved', admin=a.data[0], msg=a.errorList)
 
 @app.route('/main')
 def main():
@@ -272,30 +318,55 @@ def mainAdmin():
     userinfo = 'Hello, ' + session['user']['fname']
     return render_template('mainAdmin.html', title='Main Menu', msg = userinfo)
 
-@app.route('/savecustomer', methods = ['GET', 'POST'])
-def savecustomer():
+@app.route('/saveuser', methods = ['GET', 'POST'])
+def saveuser():
     if checkSession() == False:
         return redirect('login')
-    c = customerList()
-    c.set('id',request.form.get('id'))
-    c.set('fname',request.form.get('fname'))
-    c.set('lname',request.form.get('lname'))
-    c.set('email',request.form.get('email'))
-    c.set('password',request.form.get('password'))
-    c.set('subscribed',request.form.get('subscribed'))
-    c.add()
-    c.update()
-    print(c.data)
+    u = userList()
+    u.set('id',request.form.get('id'))
+    u.set('fname',request.form.get('fname'))
+    u.set('lname',request.form.get('lname'))
+    u.set('email',request.form.get('email'))
+    u.set('password',request.form.get('password'))
+    u.set('subscribed',request.form.get('subscribed'))
+    u.add()
+    u.update()
+    print(u.data)
     #return ''
-    return render_template('savedcustomer.html', title='Customer Saved', customer=c.data[0])
+    return render_template('saveduser.html', title='User Saved', user=u.data[0])
 
-@app.route('/deletecustomer', methods = ['GET', 'POST'])
-def deletecustomer():
+@app.route('/saveadmin', methods = ['GET', 'POST'])
+def saveadmin():
     if checkSession() == False:
         return redirect('login')
-    c = customerList()
-    c.deleteByID(request.form.get('id'))
-    return render_template('deletedCustomer.html', title='Customer Deleted', msg= 'Customer deleted.')
+    a = adminList()
+    a.set('id',request.form.get('id'))
+    a.set('fname',request.form.get('fname'))
+    a.set('lname',request.form.get('lname'))
+    a.set('email',request.form.get('email'))
+    a.set('password',request.form.get('password'))
+    a.set('subscribed',request.form.get('subscribed'))
+    a.add()
+    a.update()
+    print(a.data)
+    #return ''
+    return render_template('savedadmin.html', title='Admin Saved', admin=a.data[0])
+
+@app.route('/deleteuser', methods = ['GET', 'POST'])
+def deleteuser():
+    if checkSession() == False:
+        return redirect('login')
+    u = userList()
+    u.deleteByID(request.form.get('id'))
+    return render_template('deletedUser.html', title='User Deleted', msg= 'User deleted.')
+
+@app.route('/deleteadmin', methods = ['GET', 'POST'])
+def deleteadmin():
+    if checkSession() == False:
+        return redirect('login')
+    a = adminList()
+    a.deleteByID(request.form.get('id'))
+    return render_template('deletedAdmin.html', title='Admin Deleted', msg= 'Admin deleted.')
 
 def checkSession():
     if 'active' in session.keys():
