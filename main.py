@@ -30,6 +30,17 @@ def login():
             #print('Login Okay')
             session['user'] = c.data[0]
             session['active'] = time.time()
+            o = orderList()
+            o.getLast(session['user']['id'])
+            if len(o.data) > 0: 
+                session['orderid'] = o.data[0]['order_id']
+            else:
+                o.set('createtime','NOW')
+                o.set('status','shopping')
+                o.set('userid',session['user']['id'])
+                o.add()
+                o.insert()
+                session['orderid'] = o.data[0]['order_id'] 
 
             return redirect('main')
         else:
