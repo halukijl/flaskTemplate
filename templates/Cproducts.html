@@ -1,19 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Our Products</h1>
-    <a href="cart">Cart</a><br><br>
-    <body id='items'>
-            Small Dogs:<br>
-            <a href="productPage"> <IMG SRC="small_sweater.png"/></a>
-            <a href="productPage2"> <IMG SRC="small_sweater3.jpeg"/></a>
-            <a href="productPage3"> <IMG SRC="small_sweater2.jpeg"/></a><br>
-            <br><br>
-            Large Dogs:<br>
-            <a href="productPage4"> <IMG SRC="large_sweater.jpeg"/></a>
-            <a href="productPage5"> <IMG SRC="large_sweater3.jpeg"/></a>
-            <a href="productPage6"> <IMG SRC="large_sweater2.jpeg"/></a><br>
-            <br>
-    </body>
+    <h1>Products</h1>
+            <a href="cart">Cart</a><br><br>
+            <table>
+            <tr>
+                    <td>PID</td>
+                    <td>SKU</td>
+                    <td>NAME</td>
+                    <td>PRICE</td>
+            </tr>
+    {% for product in products %}
+            <tr>
+                    <td><a href="Cproduct?pid={{ product.pid }}">{{ product.pid }}</a></td>
+                    <td>{{ product.sku }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price}}</td>
+
+            </tr>
+    {% endfor %}
+        </table>
 
 {% endblock %}

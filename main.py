@@ -125,6 +125,7 @@ def Cproducts():
     p = productList()
     p.getAll()
 
+    print(p.data)
     return render_template('Cproducts.html', title='Our Products', products=p.data)
 
 @app.route('/users')
@@ -213,6 +214,23 @@ def product():
     print(p.data)
     #return''
     return render_template('product.html', title='Product', product=p.data[0])
+
+@app.route('/Cproduct')
+def Cproduct():
+    if checkSession() == False:
+        return redirect('login')
+    p = productList()
+    if request.args.get(p.pk) is None:
+        return render_template('error.html', msg='No product id given.')
+
+    p.getById(request.args.get(p.pk))
+    
+    if len(p.data) <= 0:
+        return render_template('error.html', msg='Product not found.')
+
+    print(p.data)
+    #return''
+    return render_template('Cproduct.html', title='Product', product=p.data[0])
 
 @app.route('/user')
 def user():

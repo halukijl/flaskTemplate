@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Products</h1>
-            <a href="newProduct"> Add new product</a>
+    <h1>Product</h1>
+        <a href="addcart">Add To Cart</a><br><br>
             <table>
             <tr>
-                    <td>PID</td>
                     <td>SKU</td>
                     <td>NAME</td>
                     <td>PRICE</td>
@@ -13,11 +12,11 @@
             </tr>
     {% for product in products %}
             <tr>
-                    <td><a href="product?pid={{ product.pid }}">{{ product.pid }}</a></td>
                     <td>{{ product.sku }}</td>
                     <td>{{ product.name }}</td>
                     <td>{{ product.price }}</td>
                     <td>{{ product.description }}</td>
+
             </tr>
     {% endfor %}
         </table>
