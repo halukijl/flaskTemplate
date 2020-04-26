@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>Product</h1>
-        <a href="addcart">Add To Cart</a><br><br>
+            <a href="Cproducts">Return to product page</a><br><br>
             <table>
             <tr>
                     <td>SKU</td>
@@ -14,11 +14,14 @@
             <tr>
                     <td>{{ product.sku }}</td>
                     <td>{{ product.name }}</td>
-                    <td>{{ product.price }}</td>
+                    <td>{{ product.price}}</td>
                     <td>{{ product.description }}</td>
 
             </tr>
     {% endfor %}
         </table>
+        <br><br>
+
+            <a href="addcart">Add to Cart</a><br><br>
 
 {% endblock %}
