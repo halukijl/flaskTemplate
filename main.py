@@ -398,6 +398,16 @@ def myorders():
     #return ''
     return render_template('myorders.html', title='My Orders',  orders=o.data)
 
+@app.route('/adminOrders')
+def adminOrders():
+    if checkSession() == False: 
+        return redirect('login')
+    o = orderList()
+    o.getAll()
+    #print(r.data)
+    #return ''
+    return render_template('adminOrders.html', title='Orders',  orders=o.data)
+
 def checkSession():
     if 'active' in session.keys():
         timeSinceAct = time.time() - session['active']

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Product</h1>
+            <table>
+            <tr>
+                    <td>ID</td>
+                    <td>CREATE TIME</td>
+                    <td>STATUS</td>
+                    <td>USER ID</td>
+            </tr>
+    {% for product in products %}
+            <tr>
+                    <td><a href="Oproduct?id={{ order.id }}">{{ order.id }}</a></td>
+                    <td>{{ order.createtime }}</td>
+                    <td>{{ order.status}}</td>
+                    <td>{{ order.userid }}</td>
+
+            </tr>
+    {% endfor %}
+        </table>
+        <br><br>
+
+{% endblock %}
