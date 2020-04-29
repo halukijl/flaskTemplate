@@ -5,6 +5,7 @@ from customer import customerList
 from admin import adminList
 from product import productList
 from user import userList
+from order import orderList
 import json, pymysql, time
 
 from flask_session import Session
@@ -36,15 +37,15 @@ def login():
             o = orderList()
             o.getLast(session['user']['id'])
             if len(o.data) > 0: 
-                session['orderid'] = o.data[0]['order_id']
+                session['orderid'] = o.data[0]['orderid']
             else:
                 o.set('createtime','NOW')
                 o.set('status','shopping')
                 o.set('userid',session['user']['id'])
                 o.add()
                 o.insert()
-                session['orderid'] = o.data[0]['order_id'] 
-            '''
+                session['orderid'] = o.data[0]['orderid'] 
+                '''
             return redirect('main')
         else:
             #print('Login Failed')
@@ -378,6 +379,24 @@ def deleteadmin():
     a = adminList()
     a.deleteByID(request.form.get('id'))
     return render_template('deletedAdmin.html', title='Admin Deleted', msg= 'Admin deleted.')
+'''
+@app.route('/cart')
+def cart():
+    if checkSession() == False:
+        return redirect('login')
+    o = orderList()
+    o.getall()
+    return render_template('cart.html', titel='Cart', msg= 'Cart.')
+'''
+@app.route('/myorders')
+def myorders():
+    if checkSession() == False: 
+        return redirect('login')
+    o = orderList()
+    o.getById(session['user']['id'])
+    #print(r.data)
+    #return ''
+    return render_template('myorders.html', title='My Orders',  orders=o.data)
 
 def checkSession():
     if 'active' in session.keys():
