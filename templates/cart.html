@@ -5,22 +5,21 @@
             <a href="main">Return to main menu</a><br><br>
             <table>
             <tr>
-                    <td>LID</td>
+                    <td>PRODUCT NAME</td>
                     <td>PRICE</td>
                     <td>QUANTITY</td>
-                    <td>OID</td>
-                    <td>PID</td>
             </tr>
-    {% for product in products %}
+    {% for lineItem in lineItems %}
             <tr>
-                    <td>{{ lineItem.lid }}</td>
+                    <td>{{ lineItem.productname }}</td>
                     <td>{{ lineItem.price }}</td>
                     <td>{{ lineItem.quantity }}</td>
-                    <td>{{ order.oid}}</td>
-                    <td>{{ product.pid}}</td>
-
             </tr>
     {% endfor %}
         </table>
+        <br><br>
+        <form action="/checkout" method="POST">
+            <input type="submit" value="Checkout?" />
+        </form>
 
 {% endblock %}

@@ -28,7 +28,7 @@ class baseObject:
         else:
             print("Invalid field: " + str(fn))
 
-    def update(self,n,fn,val):
+    def update2(self,n,fn,val):
         if len(self.data) >= (n + 1) and fn in self.fnl:
             self.data[n][fn] = val
         else:
@@ -105,10 +105,11 @@ class baseObject:
         cur.execute(sql,tokens)
 
     def getByField(self,field,value):
-        sql = 'SELECT * FROM `' + self.tn + '` WHERE`'+field+'` = %s;'
+        sql = 'SELECT * FROM `' + self.tn + '` WHERE `'+field+'` = %s;'
         tokens = (value)
         self.connect()
         cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        print(sql,tokens)
         cur.execute(sql,tokens)
         self.data = []
         for row in cur:

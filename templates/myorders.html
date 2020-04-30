@@ -11,7 +11,7 @@
             </tr>
     {% for order in orders %}
             <tr>
-                    <td><a href="order?id={{ order.oid }}">{{ order.oid }}</a></td>
+                    <td><a href="order?oid={{ order.oid }}">{{ order.oid }}</a></td>
                     <td>{{ order.createtime }}</td>
                     <td>{{ order.status}}</td>
                     <td>{{ order.userid }}</td>

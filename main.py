@@ -234,8 +234,7 @@ def Cproduct():
      print(p.data)
      #return''
      return render_template('Cproduct.html', title='Product', product=p.data[0])
-     return render_template('Cproduct.html', title='Our Products', products=p.data)
-
+     
 @app.route('/user')
 def user():
     if checkSession() == False:
@@ -402,28 +401,49 @@ def deleteadmin():
 def cart():
     if checkSession() == False:
         return redirect('login')
-    o = orderList()
-    o.getAll(request.form.get(session['orderid']))
-    return render_template('cart.html', titel='Cart', orders=o.data[0])
+    l = lineItemList()
+    l.getCart(session['orderid'])
+    #l.getByCustomer(session['orderid'])
+    return render_template('cart.html', title='Cart', lineItems=l.data)
 
 @app.route('/addToCart', methods = ['GET', 'POST'])
 def addToCart():
     if checkSession() == False:
         return redirect('login')
+    p = productList()
+    p.getById(request.form.get('pid'))
     l = lineItemList()
-    l.set(request.form.get('price'))
-    l.set(request.form.get('quantity'))
-    l.set(request.form.get(session['orderid']))
-    l.set(request.form.get('pid'))
+    l.set('price',p.data[0]['price'])
+    l.set('quantity',request.form.get('quantity'))
+    l.set('oid',session['orderid'])
+    l.set('pid',request.form.get('pid'))
     l.add()
+    l.insert()
+
+    print(l.data)
     return render_template('itemAdded.html', title='Item Added.', msg= 'Item added.')
-'''
-@app.route('/checkout')
-def addToCart():
+
+@app.route('/checkout', methods = ['GET','POST'])
+def checkout():
     if checkSession() == False:
         return redirect('login')
+    o = orderList()
+    o.getById(session['orderid'])
+    o.data[0]['status']='completed'
+    o.update()
+    o = orderList()
+    now = datetime.now()
+    o.set('createtime',str(now))
+    o.set('status','shopping')
+    o.set('userid',session['user']['id'])
+    o.add()
+    o.insert()
+    session['orderid'] = o.data[0]['oid']
+    print('oid',session['orderid'])
 
-'''
+    print(o.data)
+    return render_template('checkedout.html', title='Check Out Completed')
+
 @app.route('/deleteitem', methods = ['GET', 'POST'])
 def deleteitem():
     if checkSession() == False:
@@ -437,7 +457,7 @@ def myorders():
     if checkSession() == False: 
         return redirect('login')
     o = orderList()
-    o.getByCustomer(session['orderid'])
+    o.getByCustomer(session['user']['id'])
    
     print(o.data)
     #return''
@@ -466,26 +486,35 @@ def deleteorder():
 def vieworder():
     if checkSession() == False:
         return redirect('login')
-    o = orderList()
-    o.getByID(request.form.get('oid'))
-    return render_template('order.html', title='Order')
+    l = lineItemList()
+    if request.args.get('oid') is None:
+        return render_template('error.html', msg='No order id given.')
+
+    l.getByField('oid',request.args.get('oid'))
+    
+    if len(l.data) <= 0:
+        return render_template('error.html', msg='Order not found.')
+    
+    print(l.data)
+    #return''
+    return render_template('vieworder.html', title='Order', lineItems=l.data[0])
 
 @app.route('/order')
 def order():
     if checkSession() == False:
         return redirect('login')
-    o = orderList()
-    if request.args.get(o.pk) is None:
+    l = lineItemList()
+    if request.args.get('oid') is None:
         return render_template('error.html', msg='No order id given.')
 
-    o.getById(request.args.get(o.pk))
+    l.getByField('oid',request.args.get('oid'))
     
-    if len(o.data) <= 0:
+    if len(l.data) <= 0:
         return render_template('error.html', msg='Order not found.')
     
-    print(o.data)
+    print(l.data)
     #return''
-    return render_template('order.html', title='Order', order=o.data[0])
+    return render_template('order.html', title='Order', lineItems=l.data[0])
 
 def checkSession():
     if 'active' in session.keys():
