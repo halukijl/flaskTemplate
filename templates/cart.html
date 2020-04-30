@@ -2,20 +2,22 @@
 
 {% block content %}
     <h1>Products</h1>
-            <a href="products">Return to products page</a><br><br>
+            <a href="main">Return to main menu</a><br><br>
             <table>
             <tr>
-                    <td>PID</td>
-                    <td>SKU</td>
-                    <td>NAME</td>
+                    <td>LID</td>
                     <td>PRICE</td>
+                    <td>QUANTITY</td>
+                    <td>OID</td>
+                    <td>PID</td>
             </tr>
     {% for product in products %}
             <tr>
-                    <td>{{ product.pid }}</td>
-                    <td>{{ product.sku }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.price}}</td>
+                    <td>{{ lineItem.lid }}</td>
+                    <td>{{ lineItem.price }}</td>
+                    <td>{{ lineItem.quantity }}</td>
+                    <td>{{ order.oid}}</td>
+                    <td>{{ product.pid}}</td>
 
             </tr>
     {% endfor %}

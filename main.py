@@ -6,6 +6,8 @@ from admin import adminList
 from product import productList
 from user import userList
 from order import orderList
+from lineItem import lineItemList
+from datetime import datetime
 import json, pymysql, time
 
 from flask_session import Session
@@ -33,19 +35,19 @@ def login():
             #print('Login Okay')
             session['user'] = u.data[0]
             session['active'] = time.time()
-            '''
             o = orderList()
             o.getLast(session['user']['id'])
             if len(o.data) > 0: 
-                session['orderid'] = o.data[0]['orderid']
+                session['orderid'] = o.data[0]['oid']
             else:
-                o.set('createtime','NOW')
+                now = datetime.now()
+                o.set('createtime',str(now))
                 o.set('status','shopping')
                 o.set('userid',session['user']['id'])
                 o.add()
                 o.insert()
-                session['orderid'] = o.data[0]['orderid'] 
-                '''
+                session['orderid'] = o.data[0]['oid']
+            print('oid',session['orderid'])
             return redirect('main')
         else:
             #print('Login Failed')
@@ -218,13 +220,21 @@ def product():
 
 @app.route('/Cproduct')
 def Cproduct():
-    if checkSession() == False:
-        return redirect('login')
-    p = productList()
-    p.getById(request.args.get(p.pk))
+     if checkSession() == False:
+         return redirect('login')
+     p = productList()
+     if request.args.get(p.pk) is None:
+         return render_template('error.html', msg='No product id given.')
 
-    print(p.data)
-    return render_template('Cproduct.html', title='Our Products', products=p.data)
+     p.getById(request.args.get(p.pk))
+
+     if len(p.data) <= 0:
+         return render_template('error.html', msg='Product not found.')
+
+     print(p.data)
+     #return''
+     return render_template('Cproduct.html', title='Product', product=p.data[0])
+     return render_template('Cproduct.html', title='Our Products', products=p.data)
 
 @app.route('/user')
 def user():
@@ -372,6 +382,14 @@ def deleteuser():
     u.deleteByID(request.form.get('id'))
     return render_template('deletedUser.html', title='User Deleted', msg= 'User deleted.')
 
+@app.route('/deleteproduct', methods = ['GET', 'POST'])
+def deleteproduct():
+    if checkSession() == False:
+        return redirect('login')
+    p = productList()
+    p.deleteByID(request.form.get('id'))
+    return render_template('deletedProduct.html', title='Product Deleted', msg= 'Product deleted.')
+
 @app.route('/deleteadmin', methods = ['GET', 'POST'])
 def deleteadmin():
     if checkSession() == False:
@@ -379,15 +397,35 @@ def deleteadmin():
     a = adminList()
     a.deleteByID(request.form.get('id'))
     return render_template('deletedAdmin.html', title='Admin Deleted', msg= 'Admin deleted.')
-'''
+
 @app.route('/cart')
 def cart():
     if checkSession() == False:
         return redirect('login')
     o = orderList()
-    o.getall()
-    return render_template('cart.html', titel='Cart', msg= 'Cart.')
-'''
+    o.getById(session['orderid'])
+    return render_template('cart.html', titel='Cart', orders=o.data[0])
+
+@app.route('/addToCart')
+def addToCart():
+    if checkSession() == False:
+        return redirect('login')
+    l = lineItemList()
+    l.set(request.form.get('price'))
+    l.set(request.form.get('quantity'))
+    l.set(request.form.get('[order.oid]'))
+    l.set(request.form.get('[product.pid]'))
+    l.add()
+    return render_template('itemAdded.html', title='Item Added.', msg= 'Item added.')
+
+@app.route('/deleteitem', methods = ['GET', 'POST'])
+def deleteitem():
+    if checkSession() == False:
+        return redirect('login')
+    o = orderList()
+    o.deleteByID(request.form.get('id'))
+    return render_template('deletedItem.html', title='Item Deleted', msg= 'Item deleted.')
+
 @app.route('/myorders')
 def myorders():
     if checkSession() == False: 
@@ -398,15 +436,26 @@ def myorders():
     #return ''
     return render_template('myorders.html', title='My Orders',  orders=o.data)
 
-@app.route('/adminOrders')
-def adminOrders():
-    if checkSession() == False: 
+@app.route('/orders')
+def orders():
+    if checkSession() == False:
         return redirect('login')
     o = orderList()
     o.getAll()
-    #print(r.data)
-    #return ''
-    return render_template('adminOrders.html', title='Orders',  orders=o.data)
+    l = lineItemList()
+    l.getall()
+
+    print(o.data)
+    #return''
+    return render_template('orders.html', title='Order List', orders=o.data)
+
+@app.route('/deleteorder', methods = ['GET', 'POST'])
+def deleteorder():
+    if checkSession() == False:
+        return redirect('login')
+    o = orderList()
+    o.deleteByID(request.form.get('id'))
+    return render_template('deletedOrder.html', title='Order Deleted', msg= 'Order deleted.')
 
 def checkSession():
     if 'active' in session.keys():

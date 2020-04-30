@@ -2,26 +2,37 @@
 
 {% block content %}
     <h1>Product</h1>
-            <a href="Cproducts">Return to product page</a><br><br>
-            <table>
-            <tr>
-                    <td>SKU</td>
-                    <td>NAME</td>
-                    <td>PRICE</td>
-                    <td>DESCRIPTION</td>
-            </tr>
-    {% for product in products %}
-            <tr>
-                    <td>{{ product.sku }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.price}}</td>
-                    <td>{{ product.description }}</td>
+        <form action="/addToCart" method="POST">
+            SKU:<br>
+            {{product.sku}}<br><br>
 
-            </tr>
-    {% endfor %}
-        </table>
-        <br><br>
+            Name:<br>
+            {{ product.name }}<br><br>
 
-            <a href="addToCart">Add to Cart</a><br><br>
+            Price:<br>
+            {{ product.price }}<br><br>
+
+            Description:<br>
+            {{ product.description }}<br><br>
+
+            <input type="hidden" name="pid" value="{{ product.pid }}" /><br>
+
+            Quantity:<br>
+            <select name="quantity">
+                <option value="True" >1</option>
+                <option value="False" >2</option>
+                <option value="False" >3</option>
+                <option value="False" >4</option>
+                <option value="False" >5</option>
+                <option value="False" >6</option>
+                <option value="False" >7</option>
+                <option value="False" >8</option>
+                <option value="False" >9</option>
+            </select>
+            <br><br>
+            
+            <input type="submit" value="Add To Cart"/>
+
+        </form>
 
 {% endblock %}
