@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Product</h1>
+    <h1>Orders</h1>
             <table>
             <tr>
                     <td>ID</td>
@@ -10,9 +10,9 @@
                     <td>PRICE</td>
                     <td>USER ID</td>
             </tr>
-    {% for product in products %}
+    {% for order in orders %}
             <tr>
-                    <td><a href="order?id={{ order.id }}">{{ order.id }}</a></td>
+                    <td><a href="order?oid={{ order.oid }}">{{ order.oid }}</a></td>
                     <td>{{ order.createtime }}</td>
                     <td>{{ order.status}}</td>
                     <td>{{ order.price}}</td>
@@ -21,6 +21,5 @@
             </tr>
     {% endfor %}
         </table>
-        <br><br>
 
 {% endblock %}

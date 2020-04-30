@@ -403,7 +403,7 @@ def cart():
     if checkSession() == False:
         return redirect('login')
     o = orderList()
-    o.getById(session['orderid'])
+    o.getAll(request.form.get(session['orderid']))
     return render_template('cart.html', titel='Cart', orders=o.data[0])
 
 @app.route('/addToCart')
@@ -417,7 +417,13 @@ def addToCart():
     l.set(request.form.get('[product.pid]'))
     l.add()
     return render_template('itemAdded.html', title='Item Added.', msg= 'Item added.')
+'''
+@app.route('/checkout')
+def addToCart():
+    if checkSession() == False:
+        return redirect('login')
 
+'''
 @app.route('/deleteitem', methods = ['GET', 'POST'])
 def deleteitem():
     if checkSession() == False:
@@ -431,10 +437,11 @@ def myorders():
     if checkSession() == False: 
         return redirect('login')
     o = orderList()
-    o.getById(session['user']['id'])
-    #print(r.data)
-    #return ''
-    return render_template('myorders.html', title='My Orders',  orders=o.data)
+    o.getAll(request.args.get(session['orderid']))
+   
+    print(o.data)
+    #return''
+    return render_template('myorders.html', title='Your Orders', orders=o.data)
 
 @app.route('/orders')
 def orders():
@@ -442,8 +449,6 @@ def orders():
         return redirect('login')
     o = orderList()
     o.getAll()
-    l = lineItemList()
-    l.getall()
 
     print(o.data)
     #return''
@@ -456,6 +461,31 @@ def deleteorder():
     o = orderList()
     o.deleteByID(request.form.get('id'))
     return render_template('deletedOrder.html', title='Order Deleted', msg= 'Order deleted.')
+
+@app.route('/vieworder', methods = ['GET'])
+def vieworder():
+    if checkSession() == False:
+        return redirect('login')
+    o = orderList()
+    o.getByID(request.form.get('oid'))
+    return render_template('order.html', title='Order')
+
+@app.route('/order')
+def order():
+    if checkSession() == False:
+        return redirect('login')
+    o = orderList()
+    if request.args.get(o.pk) is None:
+        return render_template('error.html', msg='No order id given.')
+
+    o.getById(request.args.get(o.pk))
+    
+    if len(o.data) <= 0:
+        return render_template('error.html', msg='Order not found.')
+    
+    print(o.data)
+    #return''
+    return render_template('order.html', title='Order', order=o.data[0])
 
 def checkSession():
     if 'active' in session.keys():
