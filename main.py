@@ -406,15 +406,15 @@ def cart():
     o.getAll(request.form.get(session['orderid']))
     return render_template('cart.html', titel='Cart', orders=o.data[0])
 
-@app.route('/addToCart')
+@app.route('/addToCart', methods = ['GET', 'POST'])
 def addToCart():
     if checkSession() == False:
         return redirect('login')
     l = lineItemList()
     l.set(request.form.get('price'))
     l.set(request.form.get('quantity'))
-    l.set(request.form.get('[order.oid]'))
-    l.set(request.form.get('[product.pid]'))
+    l.set(request.form.get(session['orderid']))
+    l.set(request.form.get('pid'))
     l.add()
     return render_template('itemAdded.html', title='Item Added.', msg= 'Item added.')
 '''
@@ -437,7 +437,7 @@ def myorders():
     if checkSession() == False: 
         return redirect('login')
     o = orderList()
-    o.getAll(request.args.get(session['orderid']))
+    o.getByCustomer(session['orderid'])
    
     print(o.data)
     #return''
