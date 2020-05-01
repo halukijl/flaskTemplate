@@ -5,7 +5,7 @@
             <a href="orders">Return to orders</a><br><br>
             <table>
             <tr>
-                    <td>LID</td>
+                    
                     <td>OID</td>
                     <td>PID</td>
                     <td>PRICE</td>
@@ -13,7 +13,6 @@
             </tr>
     {% for lineItem in lineItems %}
             <tr>
-                    <td>{{ lineItem.lid }}</td>
                     <td>{{ lineItem.oid }}</td>
                     <td>{{ lineItem.pid}}</td>
                     <td>{{ lineItem.price }}</td>

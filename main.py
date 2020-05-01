@@ -403,7 +403,6 @@ def cart():
         return redirect('login')
     l = lineItemList()
     l.getCart(session['orderid'])
-    #l.getByCustomer(session['orderid'])
     return render_template('cart.html', title='Cart', lineItems=l.data)
 
 @app.route('/addToCart', methods = ['GET', 'POST'])
@@ -429,6 +428,7 @@ def checkout():
     if checkSession() == False:
         return redirect('login')
     o = orderList()
+    l = lineItemList()
     o.getById(session['orderid'])
     o.data[0]['status']='completed'
     o.update()
@@ -437,6 +437,7 @@ def checkout():
     o.set('createtime',str(now))
     o.set('status','shopping')
     o.set('userid',session['user']['id'])
+    o.set('orderprice',lineItem['price']*lineItem['quantity'])
     o.add()
     o.insert()
     session['orderid'] = o.data[0]['oid']
