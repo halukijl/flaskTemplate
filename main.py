@@ -420,6 +420,7 @@ def addToCart():
     l.add()
     l.insert()
 
+
     print(l.data)
     return render_template('itemAdded.html', title='Item Added.', msg= 'Item added.')
 
