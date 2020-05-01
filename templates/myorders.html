@@ -7,13 +7,15 @@
                     <td>ID</td>
                     <td>CREATE TIME</td>
                     <td>STATUS</td>
+                    <td>PRICE</td>
                     <td>USER ID</td>
             </tr>
     {% for order in orders %}
             <tr>
-                    <td><a href="order?oid={{ order.oid }}">{{ order.oid }}</a></td>
+                    <td><a href="myorder?oid={{ order.oid }}">{{ order.oid }}</a></td>
                     <td>{{ order.createtime }}</td>
                     <td>{{ order.status}}</td>
+                    <td>{{ order.orderprice}}</td>
                     <td>{{ order.userid }}</td>
 
             </tr>

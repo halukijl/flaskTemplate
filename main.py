@@ -171,6 +171,7 @@ def newProduct():
         p.set('sku', '')
         p.set('name', '')
         p.set('price', '')
+        p.set('description', '')
         p.add()
         return render_template('newProduct.html', title='New Product', product=p.data[0])
     else:
@@ -178,6 +179,7 @@ def newProduct():
         p.set('sku',request.form.get('sku'))
         p.set('name',request.form.get('name'))
         p.set('price',request.form.get('price'))
+        p.set('description',request.form.get('description'))
         p.add()
         if p.verifyNew():
             p.insert()
@@ -195,6 +197,7 @@ def saveproduct():
     p.set('sku',request.form.get('sku'))
     p.set('name',request.form.get('name'))
     p.set('price',request.form.get('price'))
+    p.set('description',request.form.get('description'))
     p.add()
     p.update()
     print(p.data)
@@ -386,7 +389,7 @@ def deleteproduct():
     if checkSession() == False:
         return redirect('login')
     p = productList()
-    p.deleteByID(request.form.get('id'))
+    p.deleteByID(request.form.get('pid'))
     return render_template('deletedProduct.html', title='Product Deleted', msg= 'Product deleted.')
 
 @app.route('/deleteadmin', methods = ['GET', 'POST'])
@@ -419,7 +422,6 @@ def addToCart():
     l.add()
     l.insert()
 
-
     print(l.data)
     return render_template('itemAdded.html', title='Item Added.', msg= 'Item added.')
 
@@ -437,7 +439,6 @@ def checkout():
     o.set('createtime',str(now))
     o.set('status','shopping')
     o.set('userid',session['user']['id'])
-    o.set('orderprice',lineItem['price']*lineItem['quantity'])
     o.add()
     o.insert()
     session['orderid'] = o.data[0]['oid']
@@ -473,8 +474,7 @@ def orders():
     o.getAll()
 
     print(o.data)
-    #return''
-    return render_template('orders.html', title='Order List', orders=o.data)
+    return render_template('orders.html', title='Orders', orders=o.data)
 
 @app.route('/deleteorder', methods = ['GET', 'POST'])
 def deleteorder():
@@ -484,8 +484,8 @@ def deleteorder():
     o.deleteByID(request.form.get('id'))
     return render_template('deletedOrder.html', title='Order Deleted', msg= 'Order deleted.')
 
-@app.route('/vieworder', methods = ['GET'])
-def vieworder():
+@app.route('/myorder')
+def myorder():
     if checkSession() == False:
         return redirect('login')
     l = lineItemList()
@@ -498,8 +498,9 @@ def vieworder():
         return render_template('error.html', msg='Order not found.')
     
     print(l.data)
+    print(session['user']['id'])
     #return''
-    return render_template('vieworder.html', title='Order', lineItems=l.data[0])
+    return render_template('myorder.html', title='Order', lineItem=l.data[0])
 
 @app.route('/order')
 def order():
@@ -515,8 +516,8 @@ def order():
         return render_template('error.html', msg='Order not found.')
     
     print(l.data)
-    #return''
-    return render_template('order.html', title='Order', lineItems=l.data[0])
+     #return''
+    return render_template('order.html', title='Order', lineItem=l.data[0])
 
 def checkSession():
     if 'active' in session.keys():

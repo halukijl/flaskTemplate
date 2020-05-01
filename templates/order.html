@@ -5,16 +5,13 @@
             <a href="orders">Return to orders</a><br><br>
             <table>
             <tr>
-                    
-                    <td>OID</td>
-                    <td>PID</td>
+                    <td>PRODUCT NAME</td>
                     <td>PRICE</td>
                     <td>QUANTITY</td>
             </tr>
     {% for lineItem in lineItems %}
             <tr>
-                    <td>{{ lineItem.oid }}</td>
-                    <td>{{ lineItem.pid}}</td>
+                    <td>{{ lineItem.productname }}</td>
                     <td>{{ lineItem.price }}</td>
                     <td>{{ lineItem.quantity }}</td>
 

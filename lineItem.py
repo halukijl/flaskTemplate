@@ -20,10 +20,10 @@ class lineItemList(baseObject):
         for row in cur:
             self.data.append(row)
             
-    def getCheckout(self,oid):
-        sql = '''SELECT halukijl_lineItems . * ,  `halukijl_orders`.`orderprice` AS orderprice
+    def getOrder(self,oid):
+        sql = '''SELECT halukijl_lineItems . * ,  `halukijl_products`.`name` AS productname
         FROM  `halukijl_lineItems` 
-        LEFT JOIN halukijl_orders ON halukijl_lineItems.oid = halukijl_orders.oid
+        LEFT JOIN halukijl_products ON halukijl_lineItems.pid = halukijl_products.pid
         WHERE halukijl_lineItems.oid =%s'''
         tokens = (oid)
         self.connect()
