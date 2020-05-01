@@ -2,6 +2,11 @@
 
 {% block content %}
     <h1>Product</h1>
+    <style>
+    body {
+        background-color: #C0E8D5;
+    }
+    </style>
         <form action="/saveproduct" method="POST">
             SKU:<br>
             <input type="int" name="sku" value="{{ product.sku }}"/><br><br>

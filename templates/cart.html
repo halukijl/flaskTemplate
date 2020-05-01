@@ -2,6 +2,11 @@
 
 {% block content %}
     <h1>Cart</h1>
+    <style>
+    body {
+        background-color: #C0E8D5;
+    }
+    </style>
             <a href="main">Return to main menu</a><br><br>
             <table>
             <tr>
@@ -25,12 +30,10 @@
             <tr>
                     <td>SUBTOTAL</td>
             </tr>
-    {% for lineItem in lineItems %}
             <tr>
-                    <td>{{ lineItem.price*lineItem.quantity }} </td>
+                    <td>{{ ot }} </td>
                     
             </tr>
-    {% endfor %}
 
         </table>
 

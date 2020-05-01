@@ -108,7 +108,7 @@ def basichttp():
 def home():
     if checkSession() == False:
         return redirect('login')
-    return render_template('test.html', title='Test', msg='Welcome!')
+    return render_template('login.html', title='Login', msg='Welcome!')
 
 @app.route('/index')
 def index():
@@ -405,8 +405,17 @@ def cart():
     if checkSession() == False:
         return redirect('login')
     l = lineItemList()
+    l.getOrder(session['orderid'])
+    ot = 0.0
+    for item in l.data:
+        ot += float(item['price']) * int(item['quantity'])
+
     l.getCart(session['orderid'])
-    return render_template('cart.html', title='Cart', lineItems=l.data)
+
+    if len(l.data) <= 0:
+        return render_template('noproduct.html', msg='Please add products')
+
+    return render_template('cart.html', title='Cart', lineItems=l.data, ot=ot)
 
 @app.route('/addToCart', methods = ['GET', 'POST'])
 def addToCart():
@@ -429,10 +438,15 @@ def addToCart():
 def checkout():
     if checkSession() == False:
         return redirect('login')
-    o = orderList()
     l = lineItemList()
+    l.getOrder(session['orderid'])
+    ot = 0.0
+    for item in l.data:
+        ot += float(item['price']) * int(item['quantity'])
+    o = orderList()
     o.getById(session['orderid'])
     o.data[0]['status']='completed'
+    o.data[0]['orderprice']=ot
     o.update()
     o = orderList()
     now = datetime.now()
@@ -492,7 +506,7 @@ def myorder():
     if request.args.get('oid') is None:
         return render_template('error.html', msg='No order id given.')
 
-    l.getByField('oid',request.args.get('oid'))
+    l.getOrder(request.args.get('oid'))
     
     if len(l.data) <= 0:
         return render_template('error.html', msg='Order not found.')
@@ -500,7 +514,7 @@ def myorder():
     print(l.data)
     print(session['user']['id'])
     #return''
-    return render_template('myorder.html', title='Order', lineItem=l.data[0])
+    return render_template('myorder.html', title='Order', lineItems=l.data)
 
 @app.route('/order')
 def order():
@@ -510,14 +524,14 @@ def order():
     if request.args.get('oid') is None:
         return render_template('error.html', msg='No order id given.')
 
-    l.getByField('oid',request.args.get('oid'))
+    l.getOrder(request.args.get('oid'))
     
     if len(l.data) <= 0:
-        return render_template('error.html', msg='Order not found.')
+        return render_template('error.html', msg='No items in cart')
     
     print(l.data)
      #return''
-    return render_template('order.html', title='Order', lineItem=l.data[0])
+    return render_template('order.html', title='Order', lineItems=l.data)
 
 def checkSession():
     if 'active' in session.keys():
